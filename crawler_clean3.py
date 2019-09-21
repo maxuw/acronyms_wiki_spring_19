@@ -28,9 +28,8 @@ import pandas as pd
 
 dir_ = "wiki_links/"
 
-list_files = ['wirusowe zapalenia watroby.txt', 'wirusowe_choroby_roslin.txt', 
-              'choroby_wirusowe.txt', "goraczki_krwotoczne.txt", "grypa.txt", 
-              "choroby_pasorzytnicze.txt"]
+list_files = ['wirusowe zapalenia watroby.txt', 'choroby_wirusowe.txt', 
+              "goraczki_krwotoczne.txt", "grypa.txt", "choroby_pasorzytnicze.txt"]
 
 crawler1 = Crawler()
 
@@ -38,7 +37,7 @@ crawler1 = Crawler()
 
 links_from_files = crawler1.read_files(list_files, dir_)
 
-links_from_files[0][:5]
+links_from_files[1]
 
 
 
@@ -70,7 +69,7 @@ acronyms_data_frame.to_csv (r'medical_from_wiki.csv', index = None, header=True)
 
 
 
-par1 = crawler1.getParagraph(links_from_files[0][1], verbose=False)
+par1 = crawler1.getParagraph(links_from_files[0][0], verbose=False)
 
 par1
 

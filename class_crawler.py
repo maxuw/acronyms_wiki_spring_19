@@ -28,8 +28,8 @@ class Crawler:
 
             for link in list_link:
                 link = link[:-1]
-                paragraph, wiki_end = self.getParagraph(link, verbose)
-                series_acronym = self.getAcronymFromParapraph(paragraph, wiki_end, df_index, verbose)
+                title, paragraph, wiki_record = self.getExtandParagraph(link, verbose)
+                series_acronym = self.getAcronymFromParapraph(paragraph, wiki_record, df_index, verbose)
                 if verbose: print(series_acronym)
 
                 acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
@@ -37,7 +37,7 @@ class Crawler:
         return acronyms_data_frame
 
 
-    def getParagraph(self, url, verbose):
+    def getExtandParagraph(self, url, verbose):
 
         page = urllib.request.urlopen(url)
 
@@ -45,6 +45,9 @@ class Crawler:
 
         wikiEnd = re.search(r'\/wiki\/.+', url)
         wikiEnd = wikiEnd.group()[6:]
+
+        title = soup.find('h1')
+        title = title.getText()
 
         header_section = soup.find_all('p')
 
@@ -56,20 +59,21 @@ class Crawler:
 
         paragraph = header_section.getText()
 
-        return paragraph, wikiEnd
+        return title, paragraph, wikiEnd
 
 
-    def getAcronymFromParapraph(self, paragraph, wiki_end, df_index, verbose):
+    def getAcronymFromParapraph(self, title, paragraph, wiki_record, df_index, verbose):
 
     #     print(text_work)
-        matchObjExtension = re.match(r'(\w|\s)+', paragraph, re.UNICODE)
 
-        matchObjExtension = matchObjExtension.group()
-
-        if matchObjExtension[-1] == " ":
-            # print("space detected")
-
-            matchObjExtension = matchObjExtension[0:-1]
+        # matchObjExtension = re.match(r'(\w|\s)+', paragraph, re.UNICODE)
+        #
+        # matchObjExtension = matchObjExtension.group()
+        #
+        # if matchObjExtension[-1] == " ":
+        #     # print("space detected")
+        #
+        #     matchObjExtension = matchObjExtension[0:-1]
 
 
 
@@ -109,9 +113,8 @@ class Crawler:
             else:
                 matchObjTranslationProper = matchObjTranslationProper.group()[1:]
 
-        series_acronym = pd.Series([matchObjAcronym, matchObjExtension,
+        series_acronym = pd.Series([matchObjAcronym, title,
                                     matchObjTranslationProper, matchObjLanguage, wiki_end],
                                    index=df_index)
+
         return series_acronym
-
-
