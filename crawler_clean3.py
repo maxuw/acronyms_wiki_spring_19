@@ -63,17 +63,19 @@ acronyms_data_frame[0:10]
 
 
 
-acronyms_data_frame.to_csv (r'medical_from_wiki.csv', index = None, header=True)
+# +
+# acronyms_data_frame.to_csv (r'medical_from_wiki.csv', index = None, header=True)
+# -
 
 
 
 
 
-par1 = crawler1.getParagraph(links_from_files[0][0], verbose=False)
+par1 = crawler1.getExtandParagraph(links_from_files[0][1], verbose=False)
 
 par1
 
-crawler1.getAcronymFromParapraph(par1[0], par1[1], df_index, verbose=False)
+crawler1.getAcronymFromParapraph(par1[0], par1[1], par1[2], df_index, verbose=False)
 
 par1[1][0:-1]
 

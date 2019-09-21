@@ -114,7 +114,7 @@ class Crawler:
                 matchObjTranslationProper = matchObjTranslationProper.group()[1:]
 
         series_acronym = pd.Series([matchObjAcronym, title,
-                                    matchObjTranslationProper, matchObjLanguage, wiki_end],
+                                    matchObjTranslationProper, matchObjLanguage, wiki_record],
                                    index=df_index)
 
         return series_acronym
