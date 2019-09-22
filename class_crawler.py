@@ -29,7 +29,7 @@ class Crawler:
             for link in list_link:
                 link = link[:-1]
                 title, paragraph, wiki_record = self.getExtandParagraph(link, verbose)
-                series_acronym = self.getAcronymFromParapraph(paragraph, wiki_record, df_index, verbose)
+                series_acronym = self.getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
                 if verbose: print(series_acronym)
 
                 acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
@@ -38,6 +38,8 @@ class Crawler:
 
 
     def getExtandParagraph(self, url, verbose):
+
+        paragraph = None
 
         page = urllib.request.urlopen(url)
 
@@ -48,18 +50,64 @@ class Crawler:
 
         title = soup.find('h1')
         title = title.getText()
+        # print(title)
+        title = re.match(r'(\w|\s)+', title)
 
-        header_section = soup.find_all('p')
+        # print(title)
 
-        if len(header_section[0]) < 6:
-            header_section = header_section[1]
+        title = title.group()
 
-        else:
-            header_section = header_section[0]
+        print(title[-1])
+        if title[-1] == " ":
+            title = title[0:-1]
 
-        paragraph = header_section.getText()
+        if verbose:
+            print("Title: ", title, " Record: ", wikiEnd)
 
-        return title, paragraph, wikiEnd
+        paragraphs = soup.find_all('p')
+
+        paragraph_main = ""
+
+        for p in paragraphs:
+            b = p.find_all('b')
+            if len(b) == 0:
+                print("length of b's equals 0")
+            else:
+                print("length of b's does not equal 0")
+                paragraph_main = p
+                break
+
+        paragraph_main = paragraph_main.getText()
+
+        # header_section = soup.find_all('p')
+
+
+        #
+        #
+        #
+        # for par in header_section:
+        #     header_section_text = par.getText()
+        #     if header_section_text[0:len(title)] == title:
+        #         # print("title and par match")
+        #
+        #         paragraph = header_section_text
+        #         break
+        #
+        # if paragraph is None:
+        #     print("title and par DON'T match")
+        #
+        #     if len(header_section[0]) < 6:
+        #         header_section = header_section[1]
+        #
+        #     else:
+        #         header_section = header_section[0]
+        #
+        #     paragraph = header_section.getText()
+        #
+        #     print(title)
+        #     print(paragraph)
+
+        return title, paragraph_main, wikiEnd
 
 
     def getAcronymFromParapraph(self, title, paragraph, wiki_record, df_index, verbose):
