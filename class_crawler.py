@@ -28,7 +28,7 @@ class Crawler:
 
             for link in list_link:
                 link = link[:-1]
-                title, paragraph, wiki_record = self.getExtandParagraph(link, verbose)
+                title, paragraph, wiki_record = self.get_paragraph_title_wikirec(link, verbose)
                 series_acronym = self.getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
                 if verbose: print(series_acronym)
 
@@ -37,7 +37,7 @@ class Crawler:
         return acronyms_data_frame
 
 
-    def getExtandParagraph(self, url, verbose):
+    def get_paragraph_title_wikirec(self, url, verbose):
 
         paragraph = None
 
@@ -112,26 +112,28 @@ class Crawler:
 
     def getAcronymFromParapraph(self, title, paragraph, wiki_record, df_index, verbose):
 
-    #     print(text_work)
+        #     print(text_work)
 
-        # matchObjExtension = re.match(r'(\w|\s)+', paragraph, re.UNICODE)
-        #
-        # matchObjExtension = matchObjExtension.group()
-        #
-        # if matchObjExtension[-1] == " ":
-        #     # print("space detected")
-        #
-        #     matchObjExtension = matchObjExtension[0:-1]
+        extension = re.match(r'(\w|\s)+', paragraph, re.UNICODE)
+
+        extension = extension.group()
+
+        if extension[-1] == " ":
+            # print("space detected")
+
+            extension = extension[0:-1]
 
 
 
-        matchObjAcronym = re.search(r'[A-Z][A-Z]+', paragraph) # ogranicz do pierwszego akapitu.
 
-        if matchObjAcronym == None:
-            matchObjAcronym = "brak"
+
+        acronym = re.search(r'[A-Z][A-Z]+', paragraph) # ogranicz do pierwszego akapitu.
+
+        if acronym == None:
+            acronym = "brak"
 
         else:
-            matchObjAcronym = matchObjAcronym.group()
+            acronym = acronym.group()
 
         matchObjTranslation = re.search(r'\(\w[a-z][a-z]..(\w|\s)+', paragraph)
 
@@ -161,7 +163,7 @@ class Crawler:
             else:
                 matchObjTranslationProper = matchObjTranslationProper.group()[1:]
 
-        series_acronym = pd.Series([matchObjAcronym, title,
+        series_acronym = pd.Series([matchObjAcronym, extension,
                                     matchObjTranslationProper, matchObjLanguage, wiki_record],
                                    index=df_index)
 

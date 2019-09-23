@@ -67,11 +67,13 @@ acronyms_data_frame[0:10]
 
 
 
-
+link_opr = "https://pl.wikipedia.org/wiki/Zaka%C5%BCenia_opryszczkowe"
 
 par1 = crawler1.getExtandParagraph(links_from_files[0][1], verbose=False)
 
-par1
+par1 = crawler1.getExtandParagraph(link_opr, verbose=False)
+
+
 
 crawler1.getAcronymFromParapraph(par1[0], par1[1], par1[2], df_index, verbose=False)
 
@@ -80,48 +82,5 @@ par1[1][0:-1]
 par1 = crawler1.getExtandParagraph(links_from_files[0][1], verbose=False)
 
 par1
-
-
-
-# +
-page = urllib.request.urlopen(links_from_files[0][1])
-
-soup = BeautifulSoup(page, 'html.parser')
-
-# +
-# paragraphs = soup.find_all('p')
-# paragraphs
-# -
-
-paragraphs = soup.find_all('p')
-paragraphs
-
-# +
-# par = t.find_all('b')
-
-paragraph_main = ""
-
-for p in paragraphs:
-    b = p.find_all('b')
-    if len(b) == 0:
-        print("length of b's equals 0")
-    else:
-        print("length of b's does not equal 0")
-        paragraph_main = p
-        break
-
-# -
-
-paragraph_main
-
-        for b_ in b:
-        
-            b_ = b_.getText()
-            print(b_)
-#         if b_ == "":
-#             print("empty string")
-#         print(len(b_))
-
-
 
 
