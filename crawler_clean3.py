@@ -51,13 +51,15 @@ acronyms_data_frame
 # list_all_links
 # -
 
+acronyms_data_frame = crawler1.readAll(links_from_files, acronyms_data_frame, df_index, verbose=True, require_acronym=True)
+
+# +
+# acronyms_data_frame = crawler1.readAll(links_from_files, acronyms_data_frame, df_index, verbose=True)
+# -
 
 
-acronyms_data_frame = crawler1.readAll(links_from_files, acronyms_data_frame, df_index, verbose=True)
 
-
-
-acronyms_data_frame[0:10]
+acronyms_data_frame
 
 
 
@@ -82,5 +84,35 @@ par1[1][0:-1]
 par1 = crawler1.getExtandParagraph(links_from_files[0][1], verbose=False)
 
 par1
+
+
+
+
+
+wirusb = "Wirusowe zapalenie wątroby typu B (WZW typu B) – wirusowe zapalenie wątroby wywołane zakażeniem HBV występujące u człekokształtnych, dawniej określane mianem żółtaczki wszczepiennej. Choroba nadal powoduje epidemie w Azji i Afryce i jest endemiczna w Chinach oraz wielu innych częściach Azji. Około jednej trzeciej ludności świata zostało zainfekowanych wirusem zapalenia wątroby B[1], z czego 350 milionów to przewlekli nosiciele. Zakażenie HBV dotyka w Europie 1 na 50 osób[2]."
+
+wzwb = "Wirus zapalenia wątroby typu B (WZW B, ang. hepatitis B virus, HBV) – otoczkowy wirus DNA z rodziny Hepadnaviridae, hepatotropowy i limfotropowy, powodujący wirusowe zapalenie wątroby typu B, zidentyfikowany przez Barucha Samuela Blumberga w 1967 roku[1]."
+
+acronym = re.search(r'\([A-Z][A-Z]+\s*[A-Z]*', wirusb)
+
+acronym.group()
+
+pom = "Afrykański pomór świń (łac. Pestis africana suum; ang. African swine fever, ASF) – wirusowa, posocznicowa choroba świń o przebiegu ostrym lub przewlekłym. Cechą charakterystyczną jest bardzo silna wybroczynowość i bardzo wysoka śmiertelność."
+
+acronym = re.search(r'\([^\(]+[A-Z][A-Z]+\s*\w*\s[A-Z]*', pom)
+
+acronym = re.search(r'\(([^\(|^\)])+\)', pom)
+
+acronym
+
+acronym.group()
+
+acr = acronym.group()
+
+acr
+
+acronym = re.search(r'[A-Z][A-Z]+', acr)
+
+acronym
 
 

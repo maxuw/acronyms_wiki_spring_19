@@ -23,7 +23,7 @@ class Crawler:
         return final_list
 
 
-    def readAll(self, nested_links, acronyms_data_frame, df_index, verbose):
+    def readAll(self, nested_links, acronyms_data_frame, df_index, verbose, require_acronym):
         for list_link in nested_links:
 
             for link in list_link:
@@ -32,7 +32,12 @@ class Crawler:
                 series_acronym = self.getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
                 if verbose: print(series_acronym)
 
-                acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+                if require_acronym == True:
+                    if series_acronym["akronim"] != "brak":
+                        acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+
+                else:
+                    acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
 
         return acronyms_data_frame
 
@@ -110,6 +115,52 @@ class Crawler:
         return title, paragraph_main, wikiEnd
 
 
+    def get_acronym(self, paragraph):
+
+        acronym = None
+
+        acronym = re.search(r'\([A-Z][A-Z]+\s*\w*\s[A-Z]*', paragraph)
+
+        if acronym is not None:
+            acronym = acronym.group()
+
+            if acronym[0:1] == "(":
+                acronym = acronym[1:]
+
+        if acronym is None:
+            temp = re.search(r'\(([^\(|^\)])+\)', paragraph)
+
+            if temp is not None:
+                temp = temp.group()
+
+                acronym = re.search(r'[A-Z][A-Z]+', temp)
+
+                if acronym is not None:
+                    acronym = acronym.group()
+
+                # if acronym[0:1] == "(":
+                #     acronym = acronym[1:]
+
+
+
+
+        if acronym is None:
+
+            acronym = re.search(r'\,\s[A-Z][A-Z]+\s*\w*\s[A-Z]*', paragraph)
+
+            if acronym is not None:
+                acronym = acronym.group()
+
+                if acronym[0:1] == ", ":
+                    acronym = acronym[2:]
+
+        if acronym is None:
+            acronym = "brak"
+            print(paragraph)
+
+
+        return acronym
+
     def getAcronymFromParapraph(self, title, paragraph, wiki_record, df_index, verbose):
 
         #     print(text_work)
@@ -124,18 +175,10 @@ class Crawler:
             extension = extension[0:-1]
 
 
-
-
-
-        acronym = re.search(r'[A-Z][A-Z]+', paragraph) # ogranicz do pierwszego akapitu.
-
-        if acronym == None:
-            acronym = "brak"
-
-        else:
-            acronym = acronym.group()
+        acronym = self.get_acronym(paragraph)
 
         matchObjTranslation = re.search(r'\(\w[a-z][a-z]..(\w|\s)+', paragraph)
+
 
     #     if matchObjTranslation == None:
     #         matchObjTranslation = re.search(r'\((\w|\s)+', paragraph)
@@ -163,7 +206,7 @@ class Crawler:
             else:
                 matchObjTranslationProper = matchObjTranslationProper.group()[1:]
 
-        series_acronym = pd.Series([matchObjAcronym, extension,
+        series_acronym = pd.Series([acronym, extension,
                                     matchObjTranslationProper, matchObjLanguage, wiki_record],
                                    index=df_index)
 
