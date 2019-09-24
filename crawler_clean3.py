@@ -29,7 +29,9 @@ import pandas as pd
 dir_ = "wiki_links/"
 
 list_files = ['wirusowe zapalenia watroby.txt', 'choroby_wirusowe.txt', 
-              "goraczki_krwotoczne.txt", "grypa.txt", "choroby_pasorzytnicze.txt"]
+              "goraczki_krwotoczne.txt", "grypa.txt", "choroby_pasorzytnicze.txt", 
+              "choroby_przenoszone_drogą_płciową.txt", "kiła.txt", "choroby_przenoszone_przez_szczury.txt",
+              "choroby_przenoszone_przez_owady.txt", "ATC-J04.txt", "gruźlica.txt", "choroby_bakteryjne.txt"]
 
 crawler1 = Crawler()
 
@@ -37,7 +39,9 @@ crawler1 = Crawler()
 
 links_from_files = crawler1.read_files(list_files, dir_)
 
-links_from_files[1]
+# +
+# links_from_files[1]
+# -
 
 
 
@@ -116,3 +120,21 @@ acronym = re.search(r'[A-Z][A-Z]+', acr)
 acronym
 
 
+
+pom
+
+latin_translation = re.search(r'łac\.(\w[a-z]+)(\w|\s)+', pom)
+
+latin_translation = re.search(r'łac\.\s*(\w[a-z]+)(\w|\s)+', pom)
+
+latin_translation
+
+
+
+giano = "Zespół Gianottiego-Crostiego[1][2][3][4] in. choroba Gianottiego-Crostiego[5][6], ZGC (ang. Gianotti–Crosti syndrome, infantile papular acrodermatitis, papular acrodermatitis of childhood, papulovesicular acrolocated syndrome) – choroba dermatologiczna o podłożu wirusowym, o łagodnym przebiegu, charakteryzującą się czerwonomiedzianą symetryczną wysypką na policzkach, pośladkach oraz wyprostnych powierzchniach kończyn."
+
+english_translation = re.search(r'ang\.\s*(\w[a-z]+)(\-|\–|\w|\s)+', giano)
+
+english_translation
+
+–

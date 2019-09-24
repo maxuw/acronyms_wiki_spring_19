@@ -29,15 +29,19 @@ class Crawler:
             for link in list_link:
                 link = link[:-1]
                 title, paragraph, wiki_record = self.get_paragraph_title_wikirec(link, verbose)
-                series_acronym = self.getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
-                if verbose: print(series_acronym)
 
-                if require_acronym == True:
-                    if series_acronym["akronim"] != "brak":
+                if paragraph != None:
+
+                    series_acronym = self.getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
+
+                    if verbose: print(series_acronym)
+
+                    if require_acronym == True:
+                        if series_acronym["akronim"] != "brak":
+                            acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+
+                    else:
                         acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
-
-                else:
-                    acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
 
         return acronyms_data_frame
 
@@ -56,13 +60,13 @@ class Crawler:
         title = soup.find('h1')
         title = title.getText()
         # print(title)
-        title = re.match(r'(\w|\s)+', title)
+        title = re.match(r'(\d|\w|\s|\-|\–)+', title)
 
         # print(title)
 
         title = title.group()
 
-        print(title[-1])
+        # print(title[-1])
         if title[-1] == " ":
             title = title[0:-1]
 
@@ -73,14 +77,25 @@ class Crawler:
 
         paragraph_main = ""
 
+        print(title)
+        # print(paragraphs)
+
         for p in paragraphs:
             b = p.find_all('b')
             if len(b) == 0:
-                print("length of b's equals 0")
+                pass
+                # print("length of b's equals 0")
             else:
-                print("length of b's does not equal 0")
+                # print("length of b's does not equal 0")
                 paragraph_main = p
                 break
+
+        # print(paragraph_main)
+
+
+
+        if paragraph_main == "":
+            return None, None, None
 
         paragraph_main = paragraph_main.getText()
 
@@ -151,21 +166,78 @@ class Crawler:
             if acronym is not None:
                 acronym = acronym.group()
 
-                if acronym[0:1] == ", ":
+                if acronym[0:2] == ", ":
                     acronym = acronym[2:]
 
         if acronym is None:
             acronym = "brak"
-            print(paragraph)
+            # print(paragraph)
 
 
         return acronym
+
+
+    def get_translation_language(self, paragraph):
+
+        latin_translation = None
+
+        # łacina
+        latin_translation = re.search(r'łac\.\s*(\w[a-z]+)(\w|\s)+', paragraph)
+        english_translation = re.search(r'ang\.\s*(\w[a-z]+)(\-|\–|\w|\s)+', paragraph)
+
+
+        if latin_translation is not None:
+            latin_translation = latin_translation.group()
+            translation = latin_translation[5:]
+            language = latin_translation[0:4]
+
+        elif english_translation is not None:
+            english_translation = english_translation.group()
+            translation = english_translation[5:]
+            language = english_translation[0:4]
+
+
+        if latin_translation is None and english_translation is None:
+            translation = "brak"
+            language = "brak"
+
+        # matchObjTranslation = re.search(r'\(\w[a-z][a-z]..(\w|\s)+', paragraph)
+
+
+    #     if matchObjTranslation == None:
+    #         matchObjTranslation = re.search(r'\((\w|\s)+', paragraph)
+    # #     matchObjTranslation = re.search(r'\w\w\w.\xa0(\w|\s)+', text_work)
+
+    #
+    #     if matchObjTranslation == None:
+    #
+    #         print("no translation")
+    #         matchObjLanguage = "brak"
+    #         matchObjTranslationProper = "brak"
+    #
+    #     else:
+    # #         print("dupa")
+    # #         print(matchObjTranslation)
+    #
+    #         matchObjLanguage = re.search(r'\w+', matchObjTranslation.group())
+    # #         print(matchObjLanguage)
+    #         matchObjLanguage = matchObjLanguage.group()
+    #         matchObjTranslationProper = re.search(r'\s(\w|\s)+', matchObjTranslation.group())
+    #
+    # #         print(matchObjTranslationProper)
+    #         if matchObjTranslationProper == None:
+    #             matchObjTranslationProper = "brak"
+    #         else:
+    #             matchObjTranslationProper = matchObjTranslationProper.group()[1:]
+
+        return translation, language
+
 
     def getAcronymFromParapraph(self, title, paragraph, wiki_record, df_index, verbose):
 
         #     print(text_work)
 
-        extension = re.match(r'(\w|\s)+', paragraph, re.UNICODE)
+        extension = re.match(r'(\w|\s|\-|\–)+', paragraph, re.UNICODE)
 
         extension = extension.group()
 
@@ -177,37 +249,11 @@ class Crawler:
 
         acronym = self.get_acronym(paragraph)
 
-        matchObjTranslation = re.search(r'\(\w[a-z][a-z]..(\w|\s)+', paragraph)
 
-
-    #     if matchObjTranslation == None:
-    #         matchObjTranslation = re.search(r'\((\w|\s)+', paragraph)
-    # #     matchObjTranslation = re.search(r'\w\w\w.\xa0(\w|\s)+', text_work)
-
-        if matchObjTranslation == None:
-
-            print("no translation")
-            matchObjLanguage = "brak"
-            matchObjTranslationProper = "brak"
-
-
-        else:
-    #         print("dupa")
-    #         print(matchObjTranslation)
-
-            matchObjLanguage = re.search(r'\w+', matchObjTranslation.group())
-    #         print(matchObjLanguage)
-            matchObjLanguage = matchObjLanguage.group()
-            matchObjTranslationProper = re.search(r'\s(\w|\s)+', matchObjTranslation.group())
-
-    #         print(matchObjTranslationProper)
-            if matchObjTranslationProper == None:
-                matchObjTranslationProper = "brak"
-            else:
-                matchObjTranslationProper = matchObjTranslationProper.group()[1:]
+        translation, language = self.get_translation_language(paragraph)
 
         series_acronym = pd.Series([acronym, extension,
-                                    matchObjTranslationProper, matchObjLanguage, wiki_record],
+                                    translation, language, wiki_record],
                                    index=df_index)
 
         return series_acronym
