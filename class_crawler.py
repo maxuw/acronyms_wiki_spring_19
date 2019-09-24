@@ -37,7 +37,7 @@ class Crawler:
                     if verbose: print(series_acronym)
 
                     if require_acronym == True:
-                        if series_acronym["akronim"] != "brak":
+                        if series_acronym["akronim"] != "brak" and not (series_acronym["hasło_wikipedia"] == acronyms_data_frame["hasło_wikipedia"]).values.any():
                             acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
 
                     else:

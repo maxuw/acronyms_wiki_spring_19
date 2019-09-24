@@ -142,5 +142,9 @@ acronyms_data_frame
 
 
 
-acronyms_data_frame.to_csv (r'medical_from_wiki_3.csv', index = None, header=True)
+# +
+# acronyms_data_frame.to_csv (r'medical_from_wiki_3.csv', index = None, header=True)
+# -
+("Antygen_HBs" == acronyms_data_frame["hasło_wikipedia"]).values.any()
+
 
