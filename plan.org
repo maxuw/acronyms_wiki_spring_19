@@ -1,0 +1,9 @@
+* Organize emacs
+** add several windows and learn how to move between them
+** create some kind of a project tree on the left side
+
+
+* Programming plan
+** remove classes
+** search through wikipedia page recursivelly
+** integrate everything
