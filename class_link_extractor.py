@@ -41,7 +41,7 @@ def type_page(url):
     else:
         url = url.replace("wiki/", "")
 
-        print(url)
+        # print(url)
 
         if "Kategoria:" in url:
 
@@ -56,30 +56,30 @@ def type_page(url):
 
         else:
             page_type = "unknown type of page" + url
-            print(page_type + url)
+            print(page_type)
 
         # print(page_type)
         return page_type
 
 
-def return_links_within_div(url, div_name):
-    http = httplib2.Http()
-    status, response = http.request(url)
+# def return_links_within_div(url, div_name):
+#     http = httplib2.Http()
+#     status, response = http.request(url)
 
-    soup = BeautifulSoup(response, 'html.parser')
+#     soup = BeautifulSoup(response, 'html.parser')
 
-    target_div = soup.find("div", id=div_name)
+#     target_div = soup.find("div", id=div_name)
 
-    links = target_div.find_all('a')
+#     links = target_div.find_all('a')
 
-    list_links = []
+#     list_links = []
 
-    for a in links:
-        link_relative = a.get("href")
-        link_absolute = urljoin(url, link_relative)
-        list_links.append(link_absolute)
+#     for a in links:
+#         link_relative = a.get("href")
+#         link_absolute = urljoin(url, link_relative)
+#         list_links.append(link_absolute)
 
-    return list_links
+#     return list_links
 
 def return_links_within_div(url):
     html = urlopen(url)
