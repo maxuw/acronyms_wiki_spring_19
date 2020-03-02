@@ -114,7 +114,7 @@ def links_with_connect_error(url):
     wait_seconds = 10
     amount_tries = 10
 
-    links = []
+    links = None
     for i in range(amount_tries):
         try:
             with timeout(wait_seconds):
@@ -122,27 +122,92 @@ def links_with_connect_error(url):
 
         except:
             print("can't connect")
-    if links == None:
+    if links is None or links == "error parsing":
         print("tried to connectt: ", amount_tries, "for :", wait_seconds )
-    return links
+
+    else:
+        return links
 
 
-def return_links_category(links_category=[], links_record=[]):
+# def return_links_category(links_category=[], links_record=[]):
+#     links_category = links_category
+#     links_record = links_record
+
+#     while links_category != []:
+#         for l in links_category:
+#             links = return_links_within_div(l)
+#             links_category.remove(l)
+
+#             for link in links:
+#                 if type_page(link) == "category":
+#                     links_category.append(link)
+
+#                 elif type_page(link) == "record":
+#                     links_record.append(link)
+
+#         return_links_category(links_category, links_record)
+
+#     return links_record
+
+def return_links_category(links_category=[], links_record=[], category_visited=[], c=0):
+
+#     print("starting links category")
+#     print(links_category)
+
     links_category = links_category
     links_record = links_record
-
+    category_visited = category_visited
     while links_category != []:
+        c += 1
+        print(c)
         for l in links_category:
-            links = return_links_within_div(l)
+            #links_with_connect_error
+            #return_links_within_div
+            links = links_with_connect_error(l)
+
+            # print("Links: ", len(links))
+#             print(links)
+#             print("removing " + l)
             links_category.remove(l)
+            category_visited.append(l)
 
+#     return links_record
+            count_records = 0
+            count_categories = 0
             for link in links:
-                if type_page(link) == "category":
-                    links_category.append(link)
+#                 print(link)
+                type_p = type_page(link)
+                if type_p == "category":
 
-                elif type_page(link) == "record":
-                    links_record.append(link)
+                    if (link not in category_visited) and (link not in links_category):
+                        # print("adding category " + link)
+                        links_category.append(link)
+                        count_categories += 1
+#                     print(link)
 
-        return_links_category(links_category, links_record)
+                elif type_p == "record":
 
+                    if link not in links_record:
+
+                        links_record.append(link)
+                        count_records += 1
+#                         print("adding record " + link)
+#                     print(link)
+                    else:
+                        print("duplicate: ", link)
+
+                else:
+                    print("unknown type of page")
+#                     print(type_p)
+            # print("categories added: ", count_categories)
+            # print("records added: ", count_records)
+#         print("passing links record")
+#         print(links_record)
+        
+#         print("passing links category")
+#         print(links_category)
+        return_links_category(links_category, links_record, category_visited, c)
+
+    # if links_category == []:
+    #     print("found that many links in the category and it's children: ", len(links_record))
     return links_record
