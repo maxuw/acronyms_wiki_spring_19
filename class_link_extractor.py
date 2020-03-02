@@ -99,7 +99,16 @@ def return_links_within_div(url):
             link_relative = a.get("href")
             link_absolute = urljoin(url, link_relative)
             list_links.append(link_absolute)
-    return list_links
+
+
+    if list_links != []:
+        return list_links
+    elif list_links == [] and isinstance(soup, BeautifulSoup):
+        print("searched the page but did not find any relevant links")
+        return "[]"
+    else:
+        print("error parsing page, probably never connected to the desired webpage")
+        return "error parsing"
 
 def links_with_connect_error(url):
     wait_seconds = 10
