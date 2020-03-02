@@ -50,6 +50,8 @@ def type_page(url):
         elif "Portal:" in url:
 
             page_type = "portal_page"
+        elif "Wikimedia_Commons" in url:
+            page_type = "about_page"
 
         elif ":" not in url:
             page_type = "record"
@@ -85,7 +87,7 @@ def return_links_within_div(url):
     html = urlopen(url)
     soup = BeautifulSoup(html, 'html.parser')
 
-    target_divs = soup.find_all("div", class_="mw-content-ltr")
+    target_divs = soup.find_all("div", class_="mw-content-ltr", id="mw-content-text")
     list_links = []
 
     for d in target_divs:
@@ -100,15 +102,19 @@ def return_links_within_div(url):
     return list_links
 
 def links_with_connect_error(url):
+    wait_seconds = 10
+    amount_tries = 10
 
     links = []
-    while links == []:
+    for i in range(amount_tries):
         try:
-            with timeout(seconds=3):
+            with timeout(wait_seconds):
                 links = return_links_within_div(url)
 
         except:
             print("can't connect")
+    if links == None:
+        print("tried to connectt: ", amount_tries, "for :", wait_seconds )
     return links
 
 
