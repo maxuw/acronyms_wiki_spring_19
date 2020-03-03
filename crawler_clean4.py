@@ -6,8 +6,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -49,7 +49,7 @@ links_from_files = crawler1.read_files(list_files, dir1)
 # +
 # links_from_files[1]
 # -
-
+links_from_files
 
 
 # +
@@ -78,9 +78,13 @@ acronyms_data_frame
 
 
 
+
+
+
 list_files_2 = ["goraczki_krwotoczne.txt", "grypa.txt", "choroby_pasorzytnicze.txt", 
               "choroby_przenoszone_drogą_płciową.txt", "kiła.txt", "choroby_przenoszone_przez_szczury.txt",
               "choroby_przenoszone_przez_owady.txt", "ATC-J04.txt", "gruźlica.txt", "choroby_bakteryjne.txt"]
+
 
 
 
@@ -103,6 +107,7 @@ acronyms_data_frame
 
 
 list_files_3 = ["rikejstozy.txt", "choroby_grzybicze.txt", "pasażowalne_encefalopatie_gąbczaste.txt",  ]
+
 
 
 
