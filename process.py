@@ -32,9 +32,12 @@ url = "https://pl.wikipedia.org/wiki/Kategoria:Choroby_wirusowe"
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 links = link_extractor.return_links_category([url])
+# -
+
+len(links)
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
-links
+links[:10]
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
@@ -49,7 +52,9 @@ list_records = crawler.readAll(links, verbose=False, require_acronym=True)
 # -
 
 
-list_records[:10]
+len(list_records)
+
+list_records[:5]
 
 
 
@@ -58,13 +63,13 @@ list_records[:10]
 
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
-df_index = ["akronim", "fraza polska", "fraza obca", "język", "hasło_wikipedia"]
+df_index = ["akronim", "fraza polska", "fraza obca", "język", "kategorie", "hasło_wikipedia"]
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 acronyms_data_frame = pd.DataFrame(list_records, columns=df_index)
 # -
 
-acronyms_data_frame[:10]
+acronyms_data_frame[:5]
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 

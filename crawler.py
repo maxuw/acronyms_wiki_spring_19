@@ -4,8 +4,22 @@ import re
 
 import pandas as pd
 
+def write_file(links, file_name, dir_):
+    f = open(dir_ + file_name, "w+")
+
+    for link in links:
+        # use readlines to read all lines in the file
+        # The variable "lines" is a list containing all lines in the file
+        f.write(link + "\n")
+    f.close()
+
+    return None
 
 def read_files(file_names, dir):
+
+    if isinstance(file_names, str):
+        file_names = [file_names]
+
     final_list = []
 
     for file in file_names:
@@ -16,7 +30,7 @@ def read_files(file_names, dir):
         lines = f.readlines()
         # close the file after reading the lines.
         f.close()
-        final_list.append(lines)
+        final_list += lines
 
     return final_list
 
@@ -48,11 +62,11 @@ def readAll(list_link, verbose=False, require_acronym=True):
     list_all_records = []
 
     for link in list_link:
-        title, paragraph, wiki_record = get_paragraph_title_wikirec(link, verbose)
+        title, paragraph, wiki_record, categories = get_paragraph_title_wikirec(link, verbose)
 
         if paragraph != None:
 
-            record_all_fields = getAcronymFromParapraph(title, paragraph, wiki_record, verbose)
+            record_all_fields = getAcronymFromParapraph(title, paragraph, wiki_record, categories, verbose)
 
             if verbose: print(record_all_fields)
 
@@ -98,6 +112,15 @@ def get_paragraph_title_wikirec(url, verbose=False):
 
     paragraph_main = ""
 
+    section_categories = soup.find("div", class_="mw-normal-catlinks", id="mw-normal-catlinks")
+
+    categories = find_categories(section_categories)
+
+    # target_divs = soup.find_all("div", class_="mw-content-ltr", id="mw-content-text")
+    # list_links = []
+
+
+
     print(title)
     # print(paragraphs)
 
@@ -116,7 +139,7 @@ def get_paragraph_title_wikirec(url, verbose=False):
 
 
     if paragraph_main == "":
-        return None, None, None
+        return None, None, None, None
 
     paragraph_main = paragraph_main.getText()
 
@@ -148,8 +171,37 @@ def get_paragraph_title_wikirec(url, verbose=False):
     #     print(title)
     #     print(paragraph)
 
-    return title, paragraph_main, wikiEnd
+    return title, paragraph_main, wikiEnd, categories
 
+
+def find_categories(section):
+    section = section
+    # print(section)
+
+    categories = []
+
+
+    for li_ in section.find_all('li'):
+        # print(li)
+        # category = li
+        category = li_.find('a')
+
+        category = category.getText()
+
+        # category = category[11:]
+        categories.append(category)
+
+    return categories
+
+# for li_ in section_categories.find_all('li'):
+# #     print(li)
+# #     category = li
+#     category = li_.find('a')
+#     print(category)
+#     category = category.getText()
+#
+#     # category = category[11:]
+#     categories.append(category)
 
 def get_acronym(paragraph):
 
@@ -254,7 +306,7 @@ def get_translation_language(paragraph):
     return translation, language
 
 
-def getAcronymFromParapraph(title, paragraph, wiki_record, verbose):
+def getAcronymFromParapraph(title, paragraph, wiki_record, categories, verbose):
 
     #     print(text_work)
 
@@ -271,6 +323,6 @@ def getAcronymFromParapraph(title, paragraph, wiki_record, verbose):
 
     translation, language = get_translation_language(paragraph)
 
-    all_fields = [acronym, extension, translation, language, wiki_record]
+    all_fields = [acronym, extension, translation, language, categories, wiki_record]
 
     return all_fields
