@@ -26,6 +26,7 @@ import pandas as pd
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
 
+
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 url = "https://pl.wikipedia.org/wiki/Kategoria:Choroby_wirusowe"
 
@@ -38,11 +39,6 @@ links
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
 
-# + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
-df_index = ["akronim", "fraza polska", "fraza obca", "język", "hasło_wikipedia"]
-
-# + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
-acronyms_data_frame = pd.DataFrame(columns=["akronim", "fraza polska", "fraza obca", "język", "hasło_wikipedia"])
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 acronyms_data_frame
@@ -50,17 +46,36 @@ acronyms_data_frame
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
 
+
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
+list_records = crawler.readAll(links, verbose=False, require_acronym=True)
+# -
+
+
+list_records
+
 
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 acronyms_data_frame = crawler.readAll(links, acronyms_data_frame, df_index, verbose=False, require_acronym=True)
+# -
+
+
+
+
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
-
+df_index = ["akronim", "fraza polska", "fraza obca", "język", "hasło_wikipedia"]
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
+acronyms_data_frame = pd.DataFrame(list_records, columns=df_index)
+# -
+
 acronyms_data_frame
+
+# + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
+
+
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 acronyms_data_frame.to_csv (r'result.csv', index = None, header=True)

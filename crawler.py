@@ -21,26 +21,51 @@ def read_files(file_names, dir):
     return final_list
 
 
-def readAll(list_link, acronyms_data_frame, df_index, verbose=False, require_acronym=True):
+# def readAll_old(list_link, acronyms_data_frame, df_index, verbose=False, require_acronym=True):
+#
+#     for link in list_link:
+#         title, paragraph, wiki_record = get_paragraph_title_wikirec(link, verbose)
+#
+#         if paragraph != None:
+#
+#             series_acronym = getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
+#
+#             if verbose: print(series_acronym)
+#
+#             if require_acronym:
+#                 if series_acronym["akronim"] != "brak" and not (series_acronym["hasło_wikipedia"] == acronyms_data_frame["hasło_wikipedia"]).values.any():
+#                     acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+#
+#             else:
+#                 acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+#
+#     return acronyms_data_frame
+
+def readAll(list_link, verbose=False, require_acronym=True):
+
+    # acronyms_data_frame
+    # df_index
+    list_all_records = []
 
     for link in list_link:
         title, paragraph, wiki_record = get_paragraph_title_wikirec(link, verbose)
 
         if paragraph != None:
 
-            series_acronym = getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose)
+            record_all_fields = getAcronymFromParapraph(title, paragraph, wiki_record, verbose)
 
-            if verbose: print(series_acronym)
+            if verbose: print(record_all_fields)
 
             if require_acronym:
-                if series_acronym["akronim"] != "brak" and not (series_acronym["hasło_wikipedia"] == acronyms_data_frame["hasło_wikipedia"]).values.any():
-                    acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+                if record_all_fields[0] != "brak": #  and not (series_acronym["hasło_wikipedia"] == acronyms_data_frame["hasło_wikipedia"]).values.any():
+                    list_all_records.append(record_all_fields)
+                    #acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
 
             else:
-                acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
+                list_all_records.append(record_all_fields)
+                # acronyms_data_frame = acronyms_data_frame.append(series_acronym, ignore_index=True)
 
-    return acronyms_data_frame
-
+    return list_all_records
 
 def get_paragraph_title_wikirec(url, verbose=False):
 
@@ -229,7 +254,7 @@ def get_translation_language(paragraph):
     return translation, language
 
 
-def getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose):
+def getAcronymFromParapraph(title, paragraph, wiki_record, verbose):
 
     #     print(text_work)
 
@@ -242,14 +267,10 @@ def getAcronymFromParapraph(title, paragraph, wiki_record, df_index, verbose):
 
         extension = extension[0:-1]
 
-
     acronym = get_acronym(paragraph)
-
 
     translation, language = get_translation_language(paragraph)
 
-    series_acronym = pd.Series([acronym, extension,
-                                translation, language, wiki_record],
-                                index=df_index)
+    all_fields = [acronym, extension, translation, language, wiki_record]
 
-    return series_acronym
+    return all_fields
