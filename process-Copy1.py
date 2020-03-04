@@ -41,6 +41,9 @@ links
 
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
+acronyms_data_frame
+
+# + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
 
 
@@ -49,9 +52,13 @@ list_records = crawler.readAll(links, verbose=False, require_acronym=True)
 # -
 
 
-list_records[:10]
+list_records
 
 
+
+# + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
+acronyms_data_frame = crawler.readAll(links, acronyms_data_frame, df_index, verbose=False, require_acronym=True)
+# -
 
 
 
@@ -64,7 +71,7 @@ df_index = ["akronim", "fraza polska", "fraza obca", "język", "hasło_wikipedia
 acronyms_data_frame = pd.DataFrame(list_records, columns=df_index)
 # -
 
-acronyms_data_frame[:10]
+acronyms_data_frame
 
 # + jupyter={"outputs_hidden": false} pycharm={"name": "#%%\n"}
 
